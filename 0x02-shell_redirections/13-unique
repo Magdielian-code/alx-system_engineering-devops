@@ -1,2 +1,2 @@
 #!/bin/bsh
-sort | uniq 
+sort | uniq -u 
