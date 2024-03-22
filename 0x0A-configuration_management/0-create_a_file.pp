@@ -1,8 +1,13 @@
-# This manifest  a file at /tmp
+# Define the file resource
 file { '/tmp/school':
-    ensure  => 'file',
-    owner   => 'www-data',
-    group   => 'www-data',
-    mode    => '0744',
-    content => 'I love Puppet',
+    # Ensure the file exists
+    ensure => 'file',
+    # Set owner to www-data user
+    owner  => 'www-data',
+    # Set group to www-data group
+    group  => 'www-data',
+    # Set file permissions (0744)
+    mode   => '0744',
+    # Set the content of the file
+    content => "I love Puppet",
 }
