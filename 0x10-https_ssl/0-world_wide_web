@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Function to display subdomain information
+display_subdomain_info() {
+  local subdomain="$1"
+  local record_type="$2"
+  local destination="$3"
+  echo "The subdomain $subdomain is a $record_type record and points to $destination"
+}
+
+# Check for mandatory domain argument
+if [ -z "$1" ]; then
+  echo "Error: Please provide a domain name to audit."
+  exit 1
+fi
+
+domain="$1"
+subdomain="$2"
+
+# If subdomain provided, query for specific subdomain
+if [ -n "$subdomain" ]; then
+  dig_output=$(dig +short "$subdomain.$domain" A)
+else
+  # Query for specific subdomains in order
+  dig_output=$(dig +short www."$domain" A)
+  dig_output="$dig_output\n$(dig +short lb-01."$domain" A)"
+  dig_output="$dig_output\n$(dig +short web-01."$domain" A)"
+  dig_output="$dig_output\n$(dig +short web-02."$domain" A)"
+fi
+
+# Parse dig output and display information
+while read -r record; do
+  if [[ "$record" != *\;* ]]; then
+    continue
+  fi
+  record_type=$(echo "$record" | cut -d ' ' -f 1)
+  destination=$(echo "$record" | cut -d ' ' -f 4)
+  display_subdomain_info "$subdomain" "$record_type" "$destination"
+  subdomain=""  # Reset subdomain for subsequent lines (optional subdomain case)
+done <<< "$dig_output"
+
