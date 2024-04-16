@@ -10,10 +10,10 @@ apt-get -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  ehoneah-frontend
+frontend  magdiel-frontend
         bind *:80
         mode http
-        default_backend ehoneah-backend
+        default_backend magdiel-backend
 backend ehoneah-backend
         balance roundrobin
         server 63210-web-01 100.25.19.204:80 check
