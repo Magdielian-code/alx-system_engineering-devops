@@ -1,0 +1,1 @@
+this is about sql directory project
